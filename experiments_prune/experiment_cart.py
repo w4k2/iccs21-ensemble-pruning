@@ -30,7 +30,7 @@ metrics = {
     "Specificity": specificity
 }
 
-data = ws.utils.Data(selection=("all", ["imbalanced"]), path="datasets/")
+data = ws.utils.Data(selection=("all", ["imbalanced"]), path="../datasets/")
 # data = ws.utils.Data(selection=["ecoli-0-1-4-6_vs_5"], path="datasets/")
 datasets = data.load()
 
