@@ -1,0 +1,2 @@
+cleans:
+	rm store/*.npy
