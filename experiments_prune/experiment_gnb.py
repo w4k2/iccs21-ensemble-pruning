@@ -78,7 +78,7 @@ def worker(d_indx, key, data):
                     # print(ensemble_pred)
                     for m_indx, (name, metric) in enumerate(metrics.items()):
                         scores[clf_id+e_n, fold_id, m_indx] = metric(y[test], ensemble_pred)
-    np.save("results/gnb/gnb_%s" % key, scores)
+    np.save("../results/gnb/%s_gnb" % key, scores)
     print("Dataset: %s end" % key)
 # print(scores)
 # print(np.mean(scores, axis=1))
