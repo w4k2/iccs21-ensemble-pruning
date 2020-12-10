@@ -9,13 +9,14 @@ from sklearn import base
 from sklearn.metrics import balanced_accuracy_score
 import numpy as np
 from sklearn.utils.multiclass import unique_labels
+from imblearn.over_sampling import RandomOverSampler, SMOTE, BorderlineSMOTE, SVMSMOTE
 
 ba = balanced_accuracy_score
 
 
 class StratifiedBagging(BaseEnsemble, ClassifierMixin):
 
-    def __init__(self, base_estimator = None, ensemble_size=10, random_state=None, acc_prob=True):
+    def __init__(self, base_estimator = None, ensemble_size=10, random_state=None, acc_prob=True, oversampled="None"):
         """Initialization."""
         # self._base_clf = base_estimator
         self.ensemble_size = ensemble_size
@@ -23,6 +24,7 @@ class StratifiedBagging(BaseEnsemble, ClassifierMixin):
         self.base_estimator = base_estimator
         self.random_state = random_state
         self.acc_prob = acc_prob
+        self.oversampled = oversampled
 
     # Fitting
     def fit(self, X, y):
@@ -53,6 +55,19 @@ class StratifiedBagging(BaseEnsemble, ClassifierMixin):
             train_y = np.concatenate((bagymajority, bagyminority))
 
             # unique, counts = np.unique(train_y, return_counts=True)
+
+            if self.oversampled == "ROS":
+                ovs = RandomOverSampler(random_state=self.random_state)
+                train_X, train_y = ovs.fit_resample(train_X, train_y)
+            elif self.oversampled == "SMOTE":
+                ovs = SMOTE(random_state=self.random_state)
+                train_X, train_y = ovs.fit_resample(train_X, train_y)
+            elif self.oversampled == "SVMSMOTE":
+                ovs = SVMSMOTE(random_state=self.random_state)
+                train_X, train_y = ovs.fit_resample(train_X, train_y)
+            elif self.oversampled == "B2SMOTE":
+                ovs = BorderlineSMOTE(random_state=self.random_state, kind="borderline-2")
+                train_X, train_y = ovs.fit_resample(train_X, train_y)
 
             estimator.fit(train_X, train_y)
 

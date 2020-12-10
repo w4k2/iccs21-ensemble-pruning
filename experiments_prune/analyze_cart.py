@@ -8,6 +8,9 @@ import numpy as np
 from matplotlib import rcParams
 import seaborn as sb
 rcParams["font.family"] = "monospace"
+# tablefmt = "latex_booktabs"
+tablefmt = "github"
+
 
 # DATASETS x DIV x METHODS x FOLDS x METRICS
 results = np.load("gathered_cart.npy")
@@ -86,7 +89,7 @@ for div_id, div in enumerate(diversity_measures):
                      for c in conclusions])
 
     # print(t)
-print(tabulate(t, headers=clfs, tablefmt="github"))
+print(tabulate(t, headers=clfs, tablefmt=tablefmt))
 print("\nSELECTED NUMBER OF CLUSTERS")
 print("E: %i, k: %i, KW: %i, DIS: %i, Q: %i" % (best_clusters[0], best_clusters[1], best_clusters[2], best_clusters[3], best_clusters[4]))
 
@@ -106,6 +109,7 @@ clfs = ["CART-MV", "CART-SACC", "CART-E5", "CART-k3", "CART-KW3", "CART-DIS3", "
 print("\nEXPERIMENT 2 - S-O-T-A COMPARISON\n")
 t = []
 plot_mean_ranks = []
+t_mean_scores = []
 for metric_id ,metric in enumerate(metrics):
     # print("######## %s ########\n" % metric)
     # DATASETS x DIV x METHODS
@@ -127,7 +131,9 @@ for metric_id ,metric in enumerate(metrics):
         # print(selected_methods)
         metric_global_table.append(selected_methods)
     metric_global_table = np.array(metric_global_table)
-    # print(metric_global_table)
+    mean_scores = np.mean(metric_global_table, axis=0)
+    # print(mean_scores)
+    t_mean_scores.append(mean_scores)
 
     # Ranking
     ranks = []
@@ -162,8 +168,8 @@ for metric_id ,metric in enumerate(metrics):
                      for c in conclusions])
 
     # print(t)
-print(tabulate(t, headers=clfs, tablefmt="github"))
-
+print(tabulate(t, headers=clfs, tablefmt=tablefmt))
+print(tabulate(t_mean_scores, headers=clfs, tablefmt=tablefmt, floatfmt=".3f"))
 # Plot radar diagram
 
 pal = sb.color_palette("rocket")
@@ -283,3 +289,79 @@ ax.set_yticklabels([])
 
 plt.savefig("cart_radar.png", bbox_inches='tight', dpi=300)
 plt.close()
+
+
+print("\nEXPERIMENT 3 - PREPROC COMPARISON\n")
+# DATASETS x METHODS x FOLDS x METRICS
+results_pre = np.load("gathered_cart_preproc.npy")
+# DATASETS x METHODS x METRICS
+results_pre = np.mean(results_pre, axis=2)
+# print(results_pre.shape)
+# exit()
+# DATASETS x DIV x METHODS x FOLDS x METRICS
+results = np.load("gathered_cart.npy")
+# print()
+# DATASETS x DIV x METHODS x METRICS
+results = np.mean(results, axis=3)
+# Get only Q5
+# DATASETS x METRICS
+results_q5 = results[:, 4, 5, :]
+clfs = ["CART-ROS", "CART-SMOTE", "CART-SVM", "CART-B2", "CART-Q5"]
+t_mean_scores = []
+plot_mean_ranks = []
+t = []
+for metric_id ,metric in enumerate(metrics):
+    # print("######## %s ########\n" % metric)
+    # DATASETS x DIV x METHODS
+    metric_results = results_pre[:, :, metric_id]
+    # DATASET
+    get_q50 = results_q5[:, metric_id]
+    metric_global_table = []
+    for data_id, dataset in enumerate(dataset_names):
+        # print("%s" % dataset)
+        # DIV x METHODS
+        data_results = metric_results[data_id]
+        # print(get_q50[data_id])
+        data_all = np.concatenate((data_results, [get_q50[data_id]]))
+        # print(data_results, data_results.shape)
+        metric_global_table.append(data_all)
+    metric_global_table = np.array(metric_global_table)
+    mean_scores = np.mean(metric_global_table, axis=0)
+    # print(mean_scores)
+    t_mean_scores.append(mean_scores)
+
+    # Ranking
+    ranks = []
+    for ms in metric_global_table:
+        ranks.append(rankdata(ms).tolist())
+    ranks = np.array(ranks)
+    mean_ranks = np.mean(ranks, axis=0)
+    plot_mean_ranks.append(mean_ranks)
+    # print("\nRanks:\n", ranks)
+    # print("\nMean ranks:\n", mean_ranks)
+
+    alpha = .05
+    length = len(clfs)
+
+    s = np.zeros((length, length))
+    p = np.zeros((length, length))
+
+    for i in range(length):
+        for j in range(length):
+            s[i, j], p[i, j] = ranksums(ranks.T[i], ranks.T[j])
+    _ = np.where((p < alpha) * (s > 0))
+    conclusions = [list(1 + _[1][_[0] == i])
+                   for i in range(length)]
+
+    t.append(["%s" % metric] + ["%.3f" % v for v in mean_ranks])
+
+    # t.append([''] + [", ".join(["%i" % i for i in c])
+    #                  if len(c) > 0 else nc
+    #                  for c in conclusions])
+    t.append([''] + [", ".join(["%i" % i for i in c])
+                     if len(c) > 0 and len(c) < len(clfs)-1 else ("all" if len(c) == len(clfs)-1 else "---")
+                     for c in conclusions])
+
+    # print(t)
+print(tabulate(t, headers=clfs, tablefmt=tablefmt))
+# print(tabulate(t_mean_scores, headers=clfs, tablefmt=tablefmt, floatfmt=".3f"))
