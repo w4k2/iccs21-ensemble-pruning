@@ -42,9 +42,9 @@ def worker(d_indx, key, data):
     X, y = data
 
 
-    b = GaussianNB()
+    # b = GaussianNB()
     # b = DecisionTreeClassifier(random_state=1410)
-    # b = KNeighborsClassifier(weights='distance')
+    b = KNeighborsClassifier(weights='distance')
     # b = MLPClassifier(random_state=1410)
     # b = SVC(kernel='rbf', probability=False, random_state=1410)
     n_estimators = 50
@@ -53,9 +53,9 @@ def worker(d_indx, key, data):
     base_clf = StratifiedBagging(base_estimator = b, ensemble_size=n_estimators, acc_prob=True, random_state=1410)
 
     clfs = {
-        "MV-GNB": StratifiedBagging(base_estimator = b, ensemble_size=n_estimators, acc_prob=False, random_state=1410),
-        "ACC-GNB": StratifiedBagging(base_estimator = b, ensemble_size=n_estimators, acc_prob=True, random_state=1410),
-        "PRUNE-GNB":
+        "MV-kNN": StratifiedBagging(base_estimator = b, ensemble_size=n_estimators, acc_prob=False, random_state=1410),
+        "ACC-kNN": StratifiedBagging(base_estimator = b, ensemble_size=n_estimators, acc_prob=True, random_state=1410),
+        "PRUNE-kNN":
         ClusterPruningEnsemble(base_estimator=base_clf, random_state=1410, diversity="kw", hard_voting=acc_prob)
     }
 
@@ -79,7 +79,7 @@ def worker(d_indx, key, data):
                     # print(ensemble_pred)
                     for m_indx, (name, metric) in enumerate(metrics.items()):
                         scores[clf_id+e_n, fold_id, m_indx] = metric(y[test], ensemble_pred)
-    np.save("../results/gnb/%s_gnb" % key, scores)
+    np.save("../results/knn/%s_knn" % key, scores)
     print("Dataset: %s end" % key)
 # print(scores)
 # print(np.mean(scores, axis=1))

@@ -30,7 +30,7 @@ metrics = {
     "Specificity": specificity
 }
 
-dataset_names = np.load("dataset_names.npy").tolist()
+dataset_names = np.load("dataset_names_cart.npy").tolist()
 
 # data = ws.utils.Data(selection=("all", ["imbalanced"]), path="../datasets/")
 data = ws.utils.Data(selection=dataset_names, path="../datasets/")

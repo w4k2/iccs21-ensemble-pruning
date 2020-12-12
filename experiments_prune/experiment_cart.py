@@ -31,7 +31,7 @@ metrics = {
 }
 
 data = ws.utils.Data(selection=("all", ["imbalanced"]), path="../datasets/")
-# data = ws.utils.Data(selection=["ecoli-0-1-4-6_vs_5"], path="datasets/")
+# data = ws.utils.Data(selection=["glass2"], path="../datasets/")
 datasets = data.load()
 
 # for d_indx, (key, data) in enumerate(datasets.items()):
@@ -77,7 +77,7 @@ def worker(d_indx, key, data):
                     # print(ensemble_pred)
                     for m_indx, (name, metric) in enumerate(metrics.items()):
                         scores[clf_id+e_n, fold_id, m_indx] = metric(y[test], ensemble_pred)
-    np.save("results/cart/cart_%s" % key, scores)
+    np.save("../results/cart/%s_cart" % key, scores)
     print("Dataset: %s end" % key)
 # print(scores)
 # print(np.mean(scores, axis=1))

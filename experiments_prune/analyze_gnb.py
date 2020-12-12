@@ -13,7 +13,7 @@ tablefmt = "github"
 
 
 # DATASETS x DIV x METHODS x FOLDS x METRICS
-results = np.load("gathered_cart.npy")
+results = np.load("gathered_gnb.npy")
 # DATASETS x DIV x METHODS x METRICS
 results = np.mean(results, axis=3)
 # DATASETS x DIV x METHODS -> Only BAC
@@ -21,10 +21,11 @@ results = results[:, :, : ,0]
 # print(results.shape)
 
 diversity_measures = ["e", "k", "kw", "dis", "q"]
-clfs = ["CART-CL2", "CART-CL3", "CART-CL4", "CART-CL5", "CART-CL6", "CART-CL7"]
+clfs = ["GNB-CL2", "GNB-CL3", "GNB-CL4", "GNB-CL5", "GNB-CL6", "GNB-CL7"]
 metrics = ["BAC", "G-mean", "F1", "Precision", "Recall", "Specificity"]
 
-dataset_names = np.load("dataset_names_cart.npy")
+dataset_names = np.load("dataset_names_gnb.npy")
+print(dataset_names)
 # for data_id, dataset in enumerate(dataset_names):
 #     print("%s" % dataset)
 #     # DIV x METHODS
@@ -98,11 +99,11 @@ print("E: %i, k: %i, KW: %i, DIS: %i, Q: %i" % (best_clusters[0], best_clusters[
 Porownanie ze state of the art ,ranking, wszystkie metryki
 """
 # DATASETS x DIV x METHODS x FOLDS x METRICS
-results = np.load("gathered_cart.npy")
+results = np.load("gathered_gnb.npy")
 # DATASETS x DIV x METHODS x METRICS
 results = np.mean(results, axis=3)
 
-clfs = ["CART-MV", "CART-SACC", "CART-E5", "CART-k3", "CART-KW3", "CART-DIS3", "CART-Q5"]
+clfs = ["CART-MV", "CART-SACC", "GNB-E2", "GNB-k2", "GNB-KW2", "GNB-DIS2", "GNB-Q3"]
 
 
 
@@ -232,7 +233,7 @@ plt.legend(
 plt.grid(ls=":", c=(0.7, 0.7, 0.7))
 
 # Add a title
-plt.title("Mean ranks for CART methods" , size=8, y=1.08, fontfamily="serif")
+plt.title("Mean ranks for GNB methods" , size=8, y=1.08, fontfamily="serif")
 plt.tight_layout()
 
 # Draw labels
@@ -287,26 +288,26 @@ for z, (label, angle) in enumerate(zip(ax.get_yticklabels(), a)):
 ax.set_xticklabels([])
 ax.set_yticklabels([])
 
-plt.savefig("cart_radar.png", bbox_inches='tight', dpi=300)
+plt.savefig("gnb_radar.png", bbox_inches='tight', dpi=300)
 plt.close()
 
-
+# exit()
 print("\nEXPERIMENT 3 - PREPROC COMPARISON\n")
 # DATASETS x METHODS x FOLDS x METRICS
-results_pre = np.load("gathered_cart_preproc.npy")
+results_pre = np.load("gathered_gnb_preproc.npy")
 # DATASETS x METHODS x METRICS
 results_pre = np.mean(results_pre, axis=2)
 # print(results_pre.shape)
 # exit()
 # DATASETS x DIV x METHODS x FOLDS x METRICS
-results = np.load("gathered_cart.npy")
+results = np.load("gathered_gnb.npy")
 # print()
 # DATASETS x DIV x METHODS x METRICS
 results = np.mean(results, axis=3)
 # Get only Q5
 # DATASETS x METRICS
-results_q5 = results[:, 4, 5, :]
-clfs = ["CART-ROS", "CART-SMOTE", "CART-SVM", "CART-B2", "CART-Q5"]
+results_q5 = results[:, 0, 2, :]
+clfs = ["GNB-ROS", "GNB-SMOTE", "GNB-SVM", "GNB-B2", "GNB-E2"]
 t_mean_scores = []
 plot_mean_ranks = []
 t = []
@@ -326,6 +327,8 @@ for metric_id ,metric in enumerate(metrics):
         # print(data_results, data_results.shape)
         metric_global_table.append(data_all)
     metric_global_table = np.array(metric_global_table)
+    # print(metric_global_table)
+    # exit()
     mean_scores = np.mean(metric_global_table, axis=0)
     # print(mean_scores)
     t_mean_scores.append(mean_scores)
@@ -368,10 +371,9 @@ print(tabulate(t_mean_scores, headers=clfs, tablefmt=tablefmt, floatfmt=".3f"))
 
 pal = sb.color_palette("rocket")
 # print(pal.as_hex())
-# colors = ['#701f57', '#ad1759', '#e13342', '#f37651', '#f6b48f']
-colors = ["black", "black", "black", "black", "red"]
+colors = ['#701f57', '#ad1759', '#e13342', '#f37651', '#f6b48f']
 
-# colors = ["black", "black", '#f6b48f', '#701f57', '#ad1759', '#e13342', '#f37651']
+colors = ["black", "black", 'black', 'black', "red"]
 
 # colors = [(0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0.9, 0), (0, 0.9, 0), (0, 0, 0.9), (0, 0, 0.9)]
 # styl linii
@@ -427,7 +429,7 @@ plt.legend(
 plt.grid(ls=":", c=(0.7, 0.7, 0.7))
 
 # Add a title
-plt.title("Comparison with oversampling for CART" , size=8, y=1.08, fontfamily="serif")
+plt.title("Comparison with oversampling for GNB" , size=8, y=1.08, fontfamily="serif")
 plt.tight_layout()
 
 # Draw labels
@@ -482,5 +484,5 @@ for z, (label, angle) in enumerate(zip(ax.get_yticklabels(), a)):
 ax.set_xticklabels([])
 ax.set_yticklabels([])
 
-plt.savefig("cart_radar2.png", bbox_inches='tight', dpi=300)
+plt.savefig("gnb_radar2.png", bbox_inches='tight', dpi=300)
 plt.close()

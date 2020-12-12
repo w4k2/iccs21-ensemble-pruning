@@ -2,20 +2,20 @@ import numpy as np
 import os
 
 # DATASETS x METHODS x FOLDS x METRICS
-gathered = np.zeros((29, 32, 5, 6))
+gathered = np.zeros((28, 32, 5, 6))
 data_indx = 0
 datasets_names = []
-for i, (root, dirs, files) in enumerate(os.walk("../results/cart")):
+for i, (root, dirs, files) in enumerate(os.walk("../results/gnb")):
     for filename in files:
         filepath = root + os.sep + filename
-        if filepath.endswith("cart.npy"):
+        if filepath.endswith("gnb.npy"):
             print(filename)
-            datasets_names.append(filename[:-9])
+            datasets_names.append(filename[:-8])
             data = np.load("%s" % filepath)
             gathered[data_indx] = data
             data_indx += 1
 datasets_names = np.array(datasets_names)
-np.save("dataset_names_cart", datasets_names)
+np.save("dataset_names_gnb", datasets_names)
 print(gathered.shape)
 
 
@@ -45,15 +45,15 @@ for data_id in range(datasets_names.shape[0]):
                 methods_indx = [x+6 for x in methods_indx]
             # exit()
 print(gathered_by_div.shape)
-np.save("gathered_cart", gathered_by_div)
+np.save("gathered_gnb", gathered_by_div)
 # exit()
 # """
 # Gather metod z preproc
 # DATASETS x METHODS x FOLDS x METRICS
-dataset_names = np.load("dataset_names_cart.npy").tolist()
+dataset_names = np.load("dataset_names_gnb.npy").tolist()
 gathered_preproc = np.zeros((datasets_names.shape[0], 4, 5, 6))
 data_indx = 0
-for i, (root, dirs, files) in enumerate(os.walk("../results/cart")):
+for i, (root, dirs, files) in enumerate(os.walk("../results/gnb")):
     for filename in files:
         filepath = root + os.sep + filename
         if filepath.endswith("preproc.npy"):
@@ -62,5 +62,5 @@ for i, (root, dirs, files) in enumerate(os.walk("../results/cart")):
             gathered_preproc[data_indx] = data
             data_indx += 1
 print(gathered_preproc.shape)
-np.save("gathered_cart_preproc", gathered_preproc)
+np.save("gathered_gnb_preproc", gathered_preproc)
 # """
