@@ -8,8 +8,8 @@ import numpy as np
 from matplotlib import rcParams
 import seaborn as sb
 rcParams["font.family"] = "monospace"
-# tablefmt = "latex_booktabs"
-tablefmt = "github"
+tablefmt = "latex_booktabs"
+# tablefmt = "github"
 
 
 # DATASETS x DIV x METHODS x FOLDS x METRICS
@@ -20,12 +20,12 @@ results = np.mean(results, axis=3)
 results = results[:, :, : ,0]
 # print(results.shape)
 
-diversity_measures = ["e", "k", "kw", "dis", "q"]
+diversity_measures = ["E", "k", "KW", "Dis", "Q"]
 clfs = ["GNB-CL2", "GNB-CL3", "GNB-CL4", "GNB-CL5", "GNB-CL6", "GNB-CL7"]
 metrics = ["BAC", "G-mean", "F1", "Precision", "Recall", "Specificity"]
 
 dataset_names = np.load("dataset_names_gnb.npy")
-print(dataset_names)
+# print(dataset_names)
 # for data_id, dataset in enumerate(dataset_names):
 #     print("%s" % dataset)
 #     # DIV x METHODS
@@ -103,7 +103,7 @@ results = np.load("gathered_gnb.npy")
 # DATASETS x DIV x METHODS x METRICS
 results = np.mean(results, axis=3)
 
-clfs = ["CART-MV", "CART-SACC", "GNB-E2", "GNB-k2", "GNB-KW2", "GNB-DIS2", "GNB-Q3"]
+clfs = ["GNB-MV", "GNB-SACC", "GNB-E2", "GNB-k2", "GNB-KW2", "GNB-DIS2", "GNB-Q3"]
 
 
 
@@ -135,6 +135,7 @@ for metric_id ,metric in enumerate(metrics):
     mean_scores = np.mean(metric_global_table, axis=0)
     # print(mean_scores)
     t_mean_scores.append(mean_scores)
+    t_mean_scores.append(np.std(metric_global_table, axis=0))
 
     # Ranking
     ranks = []
@@ -170,6 +171,8 @@ for metric_id ,metric in enumerate(metrics):
 
     # print(t)
 print(tabulate(t, headers=clfs, tablefmt=tablefmt))
+std_metrics = np.array(["BAC", "", "G-mean", "", "F1", "", "Precision", "", "Recall", "", "Specificity", ""]).reshape(-1,1)
+t_mean_scores = np.concatenate((std_metrics, t_mean_scores), axis=1)
 print(tabulate(t_mean_scores, headers=clfs, tablefmt=tablefmt, floatfmt=".3f"))
 # Plot radar diagram
 
@@ -183,7 +186,7 @@ colors = ["black", "black", '#701f57', '#ad1759', '#e13342', '#f37651', '#f6b48f
 # styl linii
 ls = ["-", "--", "--", "--", "--", "--", "--"]
 # grubosc linii
-lw = [1, 1, 1, 1, 1, 1, 1]
+lw = [1, 1, 2, 1, 1, 1, 1]
 
 plot_mean_ranks = np.array(plot_mean_ranks).T
 radar_dt = pd.DataFrame(data=plot_mean_ranks, columns=metrics)
@@ -233,7 +236,7 @@ plt.legend(
 plt.grid(ls=":", c=(0.7, 0.7, 0.7))
 
 # Add a title
-plt.title("Mean ranks for GNB methods" , size=8, y=1.08, fontfamily="serif")
+plt.title("Mean ranks for GNB" , size=8, y=1.08)
 plt.tight_layout()
 
 # Draw labels
@@ -289,6 +292,7 @@ ax.set_xticklabels([])
 ax.set_yticklabels([])
 
 plt.savefig("gnb_radar.png", bbox_inches='tight', dpi=300)
+plt.savefig("gnb_radar.eps", bbox_inches='tight', dpi=300)
 plt.close()
 
 # exit()
@@ -332,6 +336,7 @@ for metric_id ,metric in enumerate(metrics):
     mean_scores = np.mean(metric_global_table, axis=0)
     # print(mean_scores)
     t_mean_scores.append(mean_scores)
+    t_mean_scores.append(np.std(metric_global_table, axis=0))
 
     # Ranking
     ranks = []
@@ -367,6 +372,8 @@ for metric_id ,metric in enumerate(metrics):
 
     # print(t)
 print(tabulate(t, headers=clfs, tablefmt=tablefmt))
+std_metrics = np.array(["BAC", "", "G-mean", "", "F1", "", "Precision", "", "Recall", "", "Specificity", ""]).reshape(-1,1)
+t_mean_scores = np.concatenate((std_metrics, t_mean_scores), axis=1)
 print(tabulate(t_mean_scores, headers=clfs, tablefmt=tablefmt, floatfmt=".3f"))
 
 pal = sb.color_palette("rocket")
@@ -418,7 +425,7 @@ for i in range(5):
 # Add legend
 plt.legend(
     loc="lower center",
-    ncol=4,
+    ncol=3,
     columnspacing=1,
     frameon=False,
     bbox_to_anchor=(0.5, -0.3),
@@ -429,7 +436,7 @@ plt.legend(
 plt.grid(ls=":", c=(0.7, 0.7, 0.7))
 
 # Add a title
-plt.title("Comparison with oversampling for GNB" , size=8, y=1.08, fontfamily="serif")
+plt.title("Comparison with oversampling for GNB" , size=8, y=1.08)
 plt.tight_layout()
 
 # Draw labels
@@ -485,4 +492,5 @@ ax.set_xticklabels([])
 ax.set_yticklabels([])
 
 plt.savefig("gnb_radar2.png", bbox_inches='tight', dpi=300)
+plt.savefig("gnb_radar2.eps", bbox_inches='tight', dpi=300)
 plt.close()
