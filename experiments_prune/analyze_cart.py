@@ -103,6 +103,7 @@ results = np.load("gathered_cart.npy")
 results = np.mean(results, axis=3)
 
 clfs = ["CART-MV", "CART-SACC", "CART-E5", "CART-k3", "CART-KW3", "CART-DIS3", "CART-Q5"]
+clfs = ["MV", "SACC", "CPR-E5", "CPR-k3", "CPR-KW3", "CPR-DIS3", "CPR-Q5"]
 
 
 
@@ -232,7 +233,7 @@ plt.legend(
 plt.grid(ls=":", c=(0.7, 0.7, 0.7))
 
 # Add a title
-plt.title("Mean ranks for CART" , size=8, y=1.08)
+plt.title("CART" , size=8, y=1.08)
 plt.tight_layout()
 
 # Draw labels
@@ -307,7 +308,7 @@ results = np.mean(results, axis=3)
 # Get only Q5
 # DATASETS x METRICS
 results_q5 = results[:, 4, 5, :]
-clfs = ["CART-ROS", "CART-SMOTE", "CART-SVM", "CART-B2", "CART-Q5"]
+clfs = ["ROS", "SMOTE", "SVM", "B2", "CPR-Q5"]
 t_mean_scores = []
 plot_mean_ranks = []
 t = []
@@ -428,7 +429,7 @@ plt.legend(
 plt.grid(ls=":", c=(0.7, 0.7, 0.7))
 
 # Add a title
-plt.title("Comparison with oversampling for CART" , size=8, y=1.08)
+plt.title("CART" , size=8, y=1.08)
 plt.tight_layout()
 
 # Draw labels

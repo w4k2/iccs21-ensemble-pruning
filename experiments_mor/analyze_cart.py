@@ -103,6 +103,7 @@ results = np.load("gathered_cart.npy")
 results = np.mean(results, axis=3)
 
 clfs = ["CART-MV", "CART-SACC", "CART-E7", "CART-k7", "CART-KW7", "CART-DIS7", "CART-Q3"]
+clfs = ["MV", "SACC", "RSMO-E7", "RSMO-k7", "RSMO-KW7", "RSMO-DIS7", "RSMO-Q3"]
 
 
 
@@ -232,7 +233,7 @@ plt.legend(
 plt.grid(ls=":", c=(0.7, 0.7, 0.7))
 
 # Add a title
-plt.title("RS-TSMV CART" , size=8, y=1.08)
+plt.title("CART" , size=8, y=1.08)
 plt.tight_layout()
 
 # Draw labels
@@ -308,6 +309,7 @@ results = np.mean(results, axis=3)
 # DATASETS x METRICS
 results_q5 = results[:, 4, 3, :]
 clfs = ["CART-ROS", "CART-SMOTE", "CART-SVM", "CART-B2", "CART-Q3"]
+clfs = ["ROS", "SMOTE", "SVM", "B2", "RSMO-Q3"]
 t_mean_scores = []
 plot_mean_ranks = []
 t = []
@@ -428,7 +430,7 @@ plt.legend(
 plt.grid(ls=":", c=(0.7, 0.7, 0.7))
 
 # Add a title
-plt.title("RS-TSMV CART" , size=8, y=1.08)
+plt.title("CART" , size=8, y=1.08)
 plt.tight_layout()
 
 # Draw labels

@@ -30,8 +30,8 @@ metrics = {
     "Specificity": specificity
 }
 
-data = ws.utils.Data(selection=("all", ["imbalanced"]), path="../datasets/")
-# data = ws.utils.Data(selection=["glass2"], path="../datasets/")
+# data = ws.utils.Data(selection=("all", ["imbalanced"]), path="../datasets/")
+data = ws.utils.Data(selection=["glass2"], path="../datasets/")
 datasets = data.load()
 
 # for d_indx, (key, data) in enumerate(datasets.items()):

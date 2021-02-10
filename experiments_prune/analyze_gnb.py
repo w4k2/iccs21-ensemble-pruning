@@ -104,6 +104,7 @@ results = np.load("gathered_gnb.npy")
 results = np.mean(results, axis=3)
 
 clfs = ["GNB-MV", "GNB-SACC", "GNB-E2", "GNB-k2", "GNB-KW2", "GNB-DIS2", "GNB-Q3"]
+clfs = ["MV", "SACC", "CPR-E2", "CPR-k2", "CPR-KW2", "CPR-DIS2", "CPR-Q3"]
 
 
 
@@ -236,7 +237,7 @@ plt.legend(
 plt.grid(ls=":", c=(0.7, 0.7, 0.7))
 
 # Add a title
-plt.title("Mean ranks for GNB" , size=8, y=1.08)
+plt.title("GNB" , size=8, y=1.08)
 plt.tight_layout()
 
 # Draw labels
@@ -311,7 +312,7 @@ results = np.mean(results, axis=3)
 # Get only Q5
 # DATASETS x METRICS
 results_q5 = results[:, 0, 2, :]
-clfs = ["GNB-ROS", "GNB-SMOTE", "GNB-SVM", "GNB-B2", "GNB-E2"]
+clfs = ["ROS", "SMOTE", "SVM", "B2", "CPR-E2"]
 t_mean_scores = []
 plot_mean_ranks = []
 t = []
@@ -436,7 +437,7 @@ plt.legend(
 plt.grid(ls=":", c=(0.7, 0.7, 0.7))
 
 # Add a title
-plt.title("Comparison with oversampling for GNB" , size=8, y=1.08)
+plt.title("GNB" , size=8, y=1.08)
 plt.tight_layout()
 
 # Draw labels

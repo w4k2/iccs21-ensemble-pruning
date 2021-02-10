@@ -57,7 +57,7 @@ class ClusterPruningEnsemble(BaseEnsemble, ClassifierMixin):
             self.diversity_space[4,i] = self.q - temp_q
 
         """
-        # Density estimation plots
+        # Density estimation plots PHD
         import matplotlib.pyplot as plt
         import matplotlib as mplt
         from matplotlib import rcParams
@@ -85,6 +85,37 @@ class ClusterPruningEnsemble(BaseEnsemble, ClassifierMixin):
         plt.savefig("density.eps")
         exit()
         """
+
+        # """
+        # Density estimation plots ICCS
+        import matplotlib.pyplot as plt
+        import matplotlib as mplt
+        from matplotlib import rcParams
+        rcParams['font.family'] = 'monospace'
+        rcParams['font.size'] = 18
+
+        fig, ax = plt.subplots(2, 2, figsize=(18,10))
+        # ax1 = plt.subplot2grid(shape=(2,6), loc=(0,0), colspan=2)
+        # ax2 = plt.subplot2grid((2,6), (0,2), colspan=2)
+        # ax3 = plt.subplot2grid((2,6), (0,4), colspan=2)
+        # ax4 = plt.subplot2grid((2,6), (1,1), colspan=2)
+        # ax5 = plt.subplot2grid((2,6), (1,3), colspan=2)
+        # axes = [ax1, ax2, ax3, ax4, ax5]
+        ax = ax.ravel()
+        dist_diversity_measures = ["The entropy measure E", "Measurement of interrater agreement k", "Kohavi-Wolpert variance", "The disagreement measure", "The Q statistics"]
+        for indx, i in enumerate([0,1,2,4]):
+            ax[indx].set_title(dist_diversity_measures[i])
+            ax[indx].set_xlabel("M measure")
+            sns.distplot(self.diversity_space[i], hist=True, kde=True, color = (0.6015625,0.203125,0.17578125),
+             hist_kws={'edgecolor':'black', 'color':'#d6adab', 'alpha':1.0},
+             kde_kws={'linewidth': 4}, ax=ax[indx], bins=8)
+            sns.despine(top=True, right=True, left=False, bottom=False)
+        # plt.show()
+        plt.tight_layout()
+        plt.savefig("density.png")
+        plt.savefig("density.eps")
+        exit()
+        # """
 
         # Clustering
         # DIV x CLUSTERS x CLFS
